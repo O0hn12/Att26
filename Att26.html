@@ -564,19 +564,29 @@ if (mode === "insert") {
 
   console.log("✅ تم اختيار الأسبوع:", weekCode);
 
-  // ✅ تحديث واجهة عرض الأسبوع (لو عندك عنصر لعرضه)
+  const weekMap = {
+    B: 1,
+    C: 2,
+    D: 3,
+    E: 4,
+    F: 5,
+    G: 6,
+    H: 7,
+    I: 8,
+    J: 9,
+    K: 10
+  };
+
   const weekLabel = document.getElementById("selectedWeek");
   if (weekLabel) {
-    weekLabel.textContent = weekCode;
+    weekLabel.textContent = "الأسبوع " + weekMap[weekCode];
   }
 
-  // ✅ تحديث اسم الشيت لو في الصفحة الجاية
   const sheetLabel = document.getElementById("selectedSheet");
   if (sheetLabel) {
     sheetLabel.textContent = selectedSheet;
   }
 
-  // ✅ التنقل إلى صفحة إدخال البيانات بعد اختيار الأسبوع
   changePage("weekSelectionPage", "dataSection");
 }
     
@@ -1002,3 +1012,4 @@ setTimeout(() => {
 </script>
 </body>
 </html>
+
