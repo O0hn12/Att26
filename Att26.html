@@ -230,6 +230,15 @@ table {
 .toast.success { background-color: #4CAF50; }   /* أخضر */
 .toast.error   { background-color: #f44336; }   /* أحمر */
 .toast.warning { background-color: #ff9800; }   /* أصفر */
+
+    .toast-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+}
+
   </style>
 </head>
 
@@ -353,7 +362,7 @@ table {
 <div id="backButtonContainer">
     <button id="backBtn" onclick="goBackToWeekSelection()">⬅️ رجوع</button>
 </div>
-<div id="toast"></div>
+<div id="toast-container"></div>
   <script>
     let mode = ""; // إما "insert" أو "edit"
     let selectedSheet = "";
@@ -384,19 +393,19 @@ const users = {
 if (users[username] && users[username] === password) {
   showToast("✅ تم تسجيل الدخول بنجاح", "success");
 
-  const currentUser = username; // ✅ المتغير يجب أن يأخذ من username
+  const currentUser = username;
+  const privilegedUsers = ["john", "selvana", "maria", "mariam", "bebo", "magood", "andro", "admin", "jomana", "labota", "nadeen"];
 
-  const privilegedUsers = ["john", "selvana", "maria", "mariam", "bebo", "magood", "andro", "admin", "jomana" , "labota" , "nadeen"];
-
-if (privilegedUsers.includes(currentUser)) {
-  changePage("loginSection", "chooseActionSection");
-} else {
-  changePage("loginSection", "choiceSection");
-}
+  setTimeout(() => {
+    if (privilegedUsers.includes(currentUser)) {
+      changePage("loginSection", "chooseActionSection");
+    } else {
+      changePage("loginSection", "choiceSection");
+    }
+  }, 1000); // ثانية واحدة كفاية
 } else {
   showToast("❌ اسم المستخدم أو كلمة المرور غير صحيحة!", "error");
 }
-});
 
   function goToInsert() {
   mode = "insert";
@@ -969,17 +978,19 @@ function generateWeekReport() {
       window.showWeekCount = showWeekCount;
 }
 
-      function showToast(message, type = "success", duration = 3000) {
-  const toast = document.getElementById("toast");
-  toast.textContent = message;
-  toast.className = `toast ${type} show`;
-  
-  // يختفي بعد وقت معين
-  setTimeout(() => {
-    toast.className = toast.className.replace("show", "");
-  }, duration);
-}
+      function showToast(message, type) {
+  const container = document.getElementById("toast-container");
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  toast.innerText = message;
 
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.remove();
+  }, 3000);
+}
+      
 </script>
 </body>
 </html>
