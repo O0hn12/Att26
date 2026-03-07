@@ -675,8 +675,6 @@ function showSuggestions(inputElement, suggestionsContainer) {
   checkSubmitState();
 });
     
-document.getElementById("numberInput").addEventListener("input", checkSubmitState); // ✅
-
     document.getElementById("searchInput").addEventListener("input", function () {
   if (allNames.length === 0) {
     console.warn("🟡 الأسماء لم تُحمّل بعد، سيتم إعادة التحميل...");
@@ -995,3 +993,4 @@ function generateWeekReport() {
 </script>
 </body>
 </html>
+
