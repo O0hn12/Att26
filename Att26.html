@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>Heroes Adventure 2025 Attendance</title>
+  <link rel="icon" type="image/png" href="https://i.ibb.co/FbfJxWvn/logo.png">
+  
+  <!-- إضافة ضرورية لتجاوب الموبايل -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=18+Khebrat+Musamim:wght@400;700&display=swap');
+
+    body {
+      background-image: url('https://i.imgur.com/jKMhKlP.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      color: white;
+      font-family: '18 Khebrat Musamim', serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    .data-section, .search-section, .login-section, .choice-section {
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 20px;
+      border-radius: 15px;
+      margin: 20px;
+      width: 90%;
+      max-width: 600px;
+    }
+
+    label, input, button {
+      font-size: 1.2em;
+      font-family: '18 Khebrat Musamim', serif;
+      text-align: center;
+      padding: 10px;
+      width: 100%;
+      margin-top: 10px;
+      box-sizing: border-box;
+    }
+
+    #suggestions {
+      background: white;
+      color: black;
+      text-align: right;
+      border-radius: 5px;
+      max-height: 150px;
+      overflow-y: auto;
+      position: relative;
+      z-index: 1000;
+    }
+
+    .suggestion-item {
+      padding: 5px;
+      cursor: pointer;
+    }
+
+    .suggestion-item:hover {
+      background-color: #eee;
+    }
+
+    .table-wrapper {
+  width: 100%;         /* يملأ عرض الحاوية الأم */
+  overflow-x: auto;    /* يديك scrollbar أفقي لو محتاج */
+  margin-top: 20px;
+  border-radius: 15px;
+  background-color: rgba(0,0,0,0.7);
+  padding: 10px 0;
+}
+
+table {
+  border-collapse: collapse;
+  min-width: 600px;    /* عشان لو الجدول كبير يعمل scroll */
+  width: 100%;
+  color: white;
+  font-size: 1.1em;
+  white-space: nowrap;
+}
+
+    #tableContainer {
+    max-height: 300px; /* ✅ تحديد أقصى ارتفاع للجدول داخل المربع */
+    overflow-y: auto; /* ✅ إضافة تمرير رأسي عند الحاجة */
+    border: 1px solid #ccc; /* ✅ تحسين التصميم */
+    padding: 5px;
+}
+
+    th, td {
+      border: 1px solid white;
+      padding: 10px;
+      white-space: normal;
+      word-wrap: break-word;
+      text-align: center; /* ✅ محاذاة النصوص في الوسط */
+    }
+
+    .page {
+      display: none;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    }
+
+    .page.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .choice-section button {
+      font-size: 1.5em;
+      margin: 10px;
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    #backBtn {
+    width: 100px; /* ✅ حجم مناسب */
+    height: 50px;
+    font-size: 16px; /* ✅ تصغير حجم النص بحيث يكون داخل الزر */
+    line-height: 50px; /* ✅ توسيط النص رأسياً */
+    text-align: center; /* ✅ يجعل النص في منتصف الزر */
+    padding: 0; /* ✅ إزالة أي مسافات زائدة */
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#backBtn:hover {
+    background-color: #cc0000;
+}
+    .week-title {
+    background-color: rgba(0, 0, 0, 0.3); /* ✅ جعل الخلفية أكثر وضوحًا */
+    padding: 10px; /* ✅ إضافة مساحة داخلية */
+    border-radius: 5px; /* ✅ جعل الحواف ناعمة */
+    text-align: center; /* ✅ توسيط النص */
+    font-weight: bold; /* ✅ جعل النص بارز */
+    display: inline-block; /* ✅ يمنع امتداد الخلفية خارج النص */
+    width: fit-content; /* ✅ يجعل الخلفية بنفس عرض النص */
+}
+    .welcome-box {
+    background-color: #c0c0c0; /* ✅ لون رمادي غامق واضح */
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    display: inline-block;
+    font-weight: bold;
+    color: #000; /* لون النص أسود ليتناسق مع الخلفية */
+  }
+    
+    /* تحسين التصميم على شاشات الموبايل */
+    @media screen and (max-width: 768px) {
+      .data-section, .search-section, .login-section, .choice-section {
+        width: 95%;
+        max-width: 400px;
+        padding: 15px;
+        margin: 10px auto;
+      }
+
+      label, input, button {
+        font-size: 1.4em;
+        padding: 12px;
+        margin-top: 8px;
+      }
+
+      #tableContainer {
+    max-height: 200px; /* ✅ تحديد ارتفاع أصغر للموبايل */
+    overflow-y: auto; /* ✅ السماح بالتمرير */
+    padding: 5px;
+}
+
+table {
+    font-size: 1em;
+    margin-top: 20px;
+    min-width: 100%; /* ✅ ضمان عرض الجدول بالكامل على الموبايل */
+}
+
+      .choice-section button {
+        font-size: 1.3em;
+        padding: 12px;
+        margin: 8px 0;
+      }
+    }
+
+   @media screen and (max-width: 600px) {
+    #backBtn {
+        width: 35px !important; /* ✅ تصغير الحجم */
+        height: 35px !important;
+        font-size: 14px !important; /* ✅ تقليل حجم الخط */
+        bottom: 5px !important; /* ✅ تقريبه للحافة */
+        left: 5px !important;
+    }
+}
+
+      /* Toast Notification */
+.toast {
+  visibility: hidden;
+  min-width: 250px;
+  margin-left: -125px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 8px;
+  padding: 16px;
+  position: fixed;
+  z-index: 9999;
+  left: 50%;
+  bottom: 30px;
+  font-size: 1.1em;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  transition: opacity 0.5s, bottom 0.5s;
+}
+
+.toast.show {
+  visibility: visible;
+  opacity: 1;
+  bottom: 50px;
+}
+
+/* ألوان حسب الحالة */
+.toast.success { background-color: #4CAF50; }   /* أخضر */
+.toast.error   { background-color: #f44336; }   /* أحمر */
+.toast.warning { background-color: #ff9800; }   /* أصفر */
+  </style>
+</head>
+
+  <!-- ✅ صفحة تسجيل الدخول -->
+  <div class="login-section page active" id="loginSection">
+    <h2>تسجيل الدخول</h2>
+    <div class="form-group">
+      <label for="loginUsername">username</label>
+      <input type="text" id="loginUsername">
+    </div>
+
+    <div class="form-group">
+      <label for="loginPassword">password</label>
+      <input type="password" id="loginPassword">
+    </div>
+
+    <button id="loginBtn">login</button>
+  </div>
+   <section id="chooseActionSection" style="display: none; text-align: center; padding: 20px;">
+  <div class="welcome-box">
+    <h2>مرحبًا اختر الإجراء:</h2>
+  </div>
+  <button onclick="goToInsert()">إدخال بيانات</button>
+  <button onclick="goToEdit()">تعديل بيانات</button>
+   <div class="backButtonContainer">
+  <button class="backBtn" onclick="goBackFromChoice()">⬅️ رجوع</button>
+</div>
+ </section>
+
+  <!-- ✅ صفحة اختيار الشيت -->
+  <div class="choice-section page" id="choiceSection" style="display: none;">
+    <h2>اختر الفرقة</h2>
+    <button onclick="selectSheet('1ب')">1ب</button>
+    <button onclick="selectSheet('2ب')">2ب</button>
+    <button onclick="selectSheet('3ب')">3ب</button>
+    <button onclick="selectSheet('4ب')">4ب</button>
+    <button onclick="selectSheet('5ب')">5ب</button>
+    <button onclick="selectSheet('6ب')">6ب</button>
+    <div class="backButtonContainer">
+  <button class="backBtn" onclick="changePage('choiceSection', 'loginSection')">⬅️ رجوع</button>
+</div>
+  </div>
+
+  <!-- ✅ صفحة اختيار الأسبوع -->
+<div id="weekSelectionPage" class="page" style="display: none;">
+    <div class="week-title">
+    <h2>اختر الأسبوع</h2>
+</div>
+    <div id="weekButtons">
+        <button onclick="selectWeek('B')">الأسبوع الأول</button>
+        <button onclick="selectWeek('C')">الأسبوع الثاني</button>
+        <button onclick="selectWeek('D')">الأسبوع الثالث</button>
+        <button onclick="selectWeek('E')">الأسبوع الرابع</button>
+        <button onclick="selectWeek('F')">الأسبوع الخامس</button>
+        <button onclick="selectWeek('G')">الأسبوع السادس</button>
+        <button onclick="selectWeek('H')">الأسبوع السابع</button>
+        <button onclick="selectWeek('I')">الأسبوع الثامن</button>
+        <button onclick="selectWeek('J')">الأسبوع التاسع</button>
+        <button onclick="selectWeek('K')">الأسبوع العاشر</button>
+      <div class="backButtonContainer">
+  <button class="backBtn" onclick="changePage('weekSelectionPage', 'choiceSection')">⬅️ رجوع</button>
+</div>
+    </div>
+</div>
+
+  <!-- ✅ صفحة إدخال البيانات -->
+<div class="data-section page" id="dataSection" style="display: none;">
+    <h2>Heroes Adventure 2025 - <span id="selectedSheet">لم يتم الاختيار بعد</span> - <span id="selectedWeek">لم يتم الاختيار بعد</span></h2>
+
+    <div class="form-group">
+  <label for="nameInput">الاسم</label>
+  <input type="text" id="nameInput" autocomplete="off" oninput="checkSubmitState()">
+  <div id="nameSuggestions"></div>
+</div>
+
+<div class="form-group">
+  <label for="attendanceInput">الحضور (0 - 5)</label>
+  <input type="number" id="attendanceInput" min="0" max="5" oninput="checkSubmitState()">
+</div>
+
+<div class="form-group">
+  <label for="bookInput">الكتاب (0 - 5)</label>
+  <input type="number" id="bookInput" min="0" max="5" oninput="checkSubmitState()">
+</div>
+
+
+    <button id="submitBtn" onclick="submitData()" disabled>Submit</button>
+</div>
+
+    <!-- ✅ البحث الآن مخفي في البداية -->
+<div class="search-section dark-background" id="searchSection" style="display: none;">
+  <h2>بحث عن الاسم</h2>
+  <div class="form-group">
+    <label for="searchInput">الاسم</label>
+    <input type="text" id="searchInput" autocomplete="off">
+    <div id="searchSuggestions"></div>
+  </div>
+  <button onclick="searchName()">Search</button>
+
+  <div class="search-results">
+    <div id="tableContainer">
+    <table id="resultTable">
+      <thead>
+        <tr>
+          <th>الاسم</th>
+          <th>الأسبوع 1</th>
+          <th>الأسبوع 2</th>
+          <th>الأسبوع 3</th>
+          <th>الأسبوع 4</th>
+          <th>الأسبوع 5</th>
+          <th>الأسبوع 6</th>
+          <th>الأسبوع 7</th>
+          <th>الأسبوع 8</th>
+          <th>الأسبوع 9</th>
+        </tr>
+    </thead>
+    <tbody></tbody> <!-- ✅ تأكد من وجود `tbody` داخل الجدول -->
+  </table>
+</div>
+    <!-- ✅ مربع منفصل لزر الرجوع -->
+<div id="backButtonContainer">
+    <button id="backBtn" onclick="goBackToWeekSelection()">⬅️ رجوع</button>
+</div>
+<div id="toast"></div>
+  <script>
+    let mode = ""; // إما "insert" أو "edit"
+    let selectedSheet = "";
+    const scriptURL = 'https://attendace.johnmamdouh777.workers.dev/';
+    let allNames = [];
+    
+    document.getElementById("loginBtn").addEventListener("click", function () {
+  console.log("🔍 تم الضغط على تسجيل الدخول");
+
+  const username = document.getElementById("loginUsername").value.trim();
+  const password = document.getElementById("loginPassword").value.trim();
+
+const users = {
+  "hgf2013": "2182013",
+  "john": "viscabarca",
+  "selvana": "123",
+  "maria": "123",
+  "mariam": "123",
+  "bebo": "123",
+  "magood": "123",
+  "andro": "123",
+  "admin": "000" ,
+  "jomana": "123" ,
+  "nadeen": "123" ,
+  "labota": "204625"
+};
+
+if (users[username] && users[username] === password) {
+  showToast("✅ تم تسجيل الدخول بنجاح", "success");
+
+  const currentUser = username; // ✅ المتغير يجب أن يأخذ من username
+
+  const privilegedUsers = ["john", "selvana", "maria", "mariam", "bebo", "magood", "andro", "admin", "jomana" , "labota" , "nadeen"];
+
+if (privilegedUsers.includes(currentUser)) {
+  changePage("loginSection", "chooseActionSection");
+} else {
+  changePage("loginSection", "choiceSection");
+}
+} else {
+  showToast("❌ اسم المستخدم أو كلمة المرور غير صحيحة!", "error");
+}
+});
+
+  function goToInsert() {
+  mode = "insert";
+  changePage("chooseActionSection", "choiceSection");
+}
+
+function goToEdit() {
+  mode = "edit";
+  changePage("chooseActionSection", "choiceSection");
+}
+
+    function goBackFromChoice() {
+  if (currentUser === "john") {
+    changePage("choiceSection", "chooseActionSection");
+  } else {
+    changePage("choiceSection", "loginSection");
+  }
+}
+
+    function changePage(oldPage, newPage) {
+  // ✅ أخفي الصفحة القديمة
+  const oldEl = document.getElementById(oldPage);
+  if (oldEl) {
+    oldEl.classList.remove("active");
+    oldEl.style.display = "none";
+  }
+
+  // ✅ أظهر الصفحة الجديدة
+  const newEl = document.getElementById(newPage);
+  if (newEl) {
+    newEl.style.display = "block";
+    setTimeout(() => newEl.classList.add("active"), 50);
+  } else {
+    console.error("❌ الصفحة الجديدة غير موجودة:", newPage);
+  }
+
+  // ✅ إظهار البحث فقط إذا كانت الصفحة الجديدة هي `dataSection`
+  const searchEl = document.getElementById("searchSection");
+  if (searchEl) {
+    searchEl.style.display = (newPage === "dataSection") ? "block" : "none";
+  }
+
+  // ✅ زر الرجوع يظهر في كل الصفحات ما عدا صفحة تسجيل الدخول فقط
+  const backButton = document.getElementById("backBtn");
+  if (backButton) {
+    backButton.style.display = (newPage !== "loginSection") ? "inline-block" : "none";
+  }
+}
+    
+    function selectSheet(sheetName) {
+  selectedSheet = sheetName;
+  selectedWeek = "";
+
+  // ✅ تحديث العناصر في الواجهة
+  const sheetLabel = document.getElementById("selectedSheet");
+  if (sheetLabel) sheetLabel.textContent = selectedSheet;
+
+  const weekLabel = document.getElementById("selectedWeek");
+  if (weekLabel) weekLabel.textContent = "❌ لم يتم الاختيار بعد";
+
+  showToast(`✅ تم اختيار ${sheetName}`, "success");
+  loadNames(); // ✅ تحميل الأسماء من السيرفر
+
+  // ✅ تغيير الصفحة حسب الوضع الحالي
+  if (mode === "edit") {
+    changePage("choiceSection", "dataSection");
+
+    const dataSection = document.getElementById("dataSection");
+    if (dataSection) {
+      dataSection.innerHTML = `
+        <h2>تعديل بيانات الطالب</h2>
+
+        <div class="form-group">
+          <label for="editWeekDropdown">اختر الأسبوع:</label>
+          <select id="editWeekDropdown" class="right-align">
+            <option value="">اختر الأسبوع</option>
+            <option value="B">الاسبوع الاول</option>
+            <option value="C">الاسبوع التانى</option>
+            <option value="D">الاسبوع الثالث</option>
+            <option value="E">الاسبوع الرابع</option>
+            <option value="F">الاسبوع الخامس</option>
+            <option value="G">الاسبوع السادس</option>
+            <option value="H">الاسبوع السابع</option>
+            <option value="I">الاسبوع الثامن</option>
+            <option value="J">الاسبوع التاسع</option>
+            <option value="K">الاسبوع العاشر</option>
+          </select>
+
+          <label for="editName">الاسم</label>
+          <input type="text" id="editName" autocomplete="off" oninput="showSuggestions(this, document.getElementById('editSuggestions'))">
+          <div id="editSuggestions" class="suggestions"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="newScore">الدرجة الجديدة</label>
+          <input type="number" id="newScore" min="0" max="10">
+        </div>
+
+        <button onclick="updateStudentScore()">✅ تعديل</button>
+
+        <hr>
+
+        <h2>تقرير الأسبوع</h2>
+        <div class="form-group">
+          <label for="reportWeekInput">اختر الأسبوع</label>
+          <select id="reportWeekInput">
+            <option value="">اختر الأسبوع</option>
+            <option value="">اختر الأسبوع</option>
+            <option value="B">الاسبوع الاول</option>
+            <option value="C">الاسبوع التانى</option>
+            <option value="D">الاسبوع الثالث</option>
+            <option value="E">الاسبوع الرابع</option>
+            <option value="F">الاسبوع الخامس</option>
+            <option value="G">الاسبوع السادس</option>
+            <option value="H">الاسبوع السابع</option>
+            <option value="I">الاسبوع الثامن</option>
+            <option value="J">الاسبوع التاسع</option>
+            <option value="K">الاسبوع العاشر</option>
+          </select>
+        </div>
+
+        <button onclick="showWeekCount()">📊 عرض العدد</button>
+        <div id="weekCountDisplay" class="form-group"></div>
+        <button onclick="generateWeekReport()">📋 عرض التقرير</button>
+        <div id="weekReportResult"></div>
+      `;
+
+      // ✅ ربط الحدث بعد توليد القائمة
+      const weekDropdown = document.getElementById("editWeekDropdown");
+      if (weekDropdown) {
+        weekDropdown.addEventListener("change", function () {
+          selectedWeek = this.value;
+          console.log("✅ تم اختيار الأسبوع:", selectedWeek);
+        });
+      }
+if (mode === "insert") {
+    changePage("choice-section", "dataSection");
+  }
+ else {
+        console.warn("❌ لم يتم العثور على editWeekDropdown");
+      }
+    }
+  } else {
+    changePage("choiceSection", "weekSelectionPage");
+  }
+}
+    
+    function selectWeek(weekCode) {
+  selectedWeek = weekCode;
+
+  console.log("✅ تم اختيار الأسبوع:", weekCode);
+
+  // ✅ تحديث واجهة عرض الأسبوع (لو عندك عنصر لعرضه)
+  const weekLabel = document.getElementById("selectedWeek");
+  if (weekLabel) {
+    weekLabel.textContent = weekCode;
+  }
+
+  // ✅ تحديث اسم الشيت لو في الصفحة الجاية
+  const sheetLabel = document.getElementById("selectedSheet");
+  if (sheetLabel) {
+    sheetLabel.textContent = selectedSheet;
+  }
+
+  // ✅ التنقل إلى صفحة إدخال البيانات بعد اختيار الأسبوع
+  changePage("weekSelectionPage", "dataSection");
+}
+    
+function loadNames() {
+  if (!selectedSheet) {
+    console.error("❌ لم يتم اختيار شيت بعد!");
+    return;
+  }
+
+  fetch(`${scriptURL}?action=getNames&sheet=${selectedSheet}`)
+    .then(res => res.text())
+    .then(data => {
+      console.log("📌 استجابة السيرفر:", data);
+      try {
+        const jsonData = JSON.parse(data);
+        if (!jsonData.names || !Array.isArray(jsonData.names)) {
+          throw new Error("❌ البيانات المستلمة لا تحتوي على قائمة أسماء صحيحة!");
+        }
+        console.log("✅ تم تحويل البيانات إلى JSON:", jsonData);
+        return jsonData;
+      } catch (error) {
+        console.error("❌ خطأ في تحويل البيانات إلى JSON:", error);
+        return { names: [], students: [] };
+      }
+    })
+    .then(data => {
+      console.log("📌 البيانات النهائية بعد التحليل:", JSON.stringify(data, null, 2));
+      allNames = data.names || [];
+
+      let tableBody = document.querySelector("#resultTable tbody");
+      tableBody.innerHTML = "";
+
+      if (Array.isArray(data.students)) {
+        data.students.forEach(student => {
+          let scores = Array.isArray(student.scores) ? student.scores : [];
+          while (scores.length < 9) scores.push("-");
+
+          let row = document.createElement("tr");
+          let nameCell = document.createElement("td");
+          nameCell.textContent = student.name || "❌ غير معروف";
+          row.appendChild(nameCell);
+
+          for (let i = 0; i < 9; i++) {
+            const td = document.createElement("td");
+            td.textContent = scores[i] !== undefined && scores[i] !== "" ? scores[i] : "-";
+            row.appendChild(td);
+          }
+
+          tableBody.appendChild(row);
+        });
+      } else {
+        console.warn("⚠️ البيانات لا تحتوي على مصفوفة طلاب!");
+      }
+    })
+    .catch(err => console.error("❌ خطأ أثناء تحميل الأسماء:", err));
+}
+
+function showSuggestions(inputElement, suggestionsContainer) {
+  if (!suggestionsContainer) {
+    console.error("❌ عنصر الاقتراحات غير موجود في HTML!");
+    return;
+  }
+
+  if (!Array.isArray(allNames) || allNames.length === 0) {
+    console.warn("🟡 الأسماء غير متوفرة أو غير مصفوفة، سيتم التحميل الآن...");
+    loadNames();
+    return;
+  }
+
+  const value = inputElement.value.toLowerCase();
+  suggestionsContainer.innerHTML = "";
+
+  if (!value) return;
+
+  const filtered = allNames.filter(name => name && name.toLowerCase().includes(value));
+
+  if (filtered.length === 0) {
+    suggestionsContainer.innerHTML = "<div class='suggestion-item'>لا توجد نتائج</div>";
+    return;
+  }
+
+  filtered.slice(0, 10).forEach(name => {
+    const item = document.createElement("div");
+    item.className = "suggestion-item";
+    item.textContent = name;
+    item.onclick = () => {
+      const exactName = allNames.find(n => n.toLowerCase().trim() === name.toLowerCase().trim());
+      inputElement.value = exactName ? exactName.trim() : name.trim();
+      suggestionsContainer.innerHTML = "";
+    };
+    suggestionsContainer.appendChild(item);
+  });
+}
+
+    document.getElementById("nameInput").addEventListener("input", function () {
+  if (allNames.length === 0) {
+    console.warn("🟡 الأسماء لم تُحمّل بعد، سيتم إعادة التحميل...");
+    loadNames();
+  }
+  showSuggestions(this, document.getElementById("nameSuggestions"));
+  checkSubmitState();
+});
+    
+document.getElementById("numberInput").addEventListener("input", checkSubmitState); // ✅
+
+    document.getElementById("searchInput").addEventListener("input", function () {
+  if (allNames.length === 0) {
+    console.warn("🟡 الأسماء لم تُحمّل بعد، سيتم إعادة التحميل...");
+    loadNames();
+  }
+  const suggestionsBox = document.getElementById("searchSuggestions");
+if (suggestionsBox) {
+  showSuggestions(this, suggestionsBox);
+} else {
+  console.warn("❌ عنصر الاقتراحات searchSuggestions مش موجود في الصفحة الحالية");
+}
+});
+    
+    function checkSubmitState() {
+  const name = document.getElementById("nameInput").value.trim();
+  const attendance = document.getElementById("attendanceInput").value.trim();
+  const book = document.getElementById("bookInput").value.trim();
+
+  const validAttendance = attendance !== "" && +attendance >= 0 && +attendance <= 5;
+  const validBook = book !== "" && +book >= 0 && +book <= 5;
+  const hasName = name !== "";
+
+  const submitButton = document.getElementById("submitBtn");
+  submitButton.disabled = !(hasName && validAttendance && validBook);
+}
+    
+    function submitData() {
+  console.log("✅ تم الضغط على زر الإدخال");
+  if (!selectedSheet) {
+    showToast("❌ يجب اختيار شيت أولاً!", "error");
+    return;
+  }
+
+  const name = document.getElementById("nameInput").value.trim();
+  const attendance = Number(document.getElementById("attendanceInput").value);
+const book = Number(document.getElementById("bookInput").value);
+const total = attendance + book;
+
+
+  // بيانات الإرسال
+  if (!selectedWeek || typeof selectedWeek !== "string" || selectedWeek.length === 0) {
+    showToast("❌ يجب تحديد الأسبوع بشكل صحيح!", "error");
+    console.error("❌ `selectedWeek` فارغ أو غير معرف:", selectedWeek);
+    return;
+}
+
+const data = {
+    name: name,
+    number: total,
+    sheet: selectedSheet,
+    week: selectedWeek // ✅ تمرير `week` كما هو بدون تحويله إلى رقم
+};
+
+  fetch(scriptURL, {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(res => res.text()) // ✅ استقبال الاستجابة كنص لفحص نوع البيانات
+.then(data => {
+    console.log("📌 استجابة السيرفر:", data);
+    try {
+        return JSON.parse(data);
+    } catch (error) {
+        console.error("❌ خطأ في تحويل البيانات إلى JSON:", error);
+        return { success: false, error: "❌ استجابة غير صالحة" };
+    }
+})
+  .then(response => {
+    console.log("✅ استجابة Google Apps Script:", response);
+    
+    if (!response.success) {
+        showToast(response.message, "error"); // 📌 عرض رسالة الخطأ للمستخدم مباشرة
+        console.error("❌ فشل إدخال البيانات:", response);
+    } else {
+        showToast("✅ تم الإدخال بنجاح!", "success");
+        document.getElementById("nameInput").value = "";
+document.getElementById("attendanceInput").value = "";
+document.getElementById("bookInput").value = "";
+
+        loadNames();
+        checkSubmitState();
+    }
+})
+  .catch(err => console.error("❌ خطأ أثناء إرسال البيانات:", err));
+}
+    
+function searchName() {
+  console.log("🔍 تم الضغط على زر البحث");
+
+  const search = document.getElementById("searchInput").value.trim();
+  if (!search) {
+    showToast("❌ يرجى إدخال اسم للبحث!", "error");
+    return;
+  }
+
+  fetch(`${scriptURL}?action=getRowByName&sheet=${selectedSheet}&name=${encodeURIComponent(search)}`)
+    .then(res => res.text())
+    .then(text => {
+      console.log("📦 استجابة البحث:", text);
+
+      if (text.startsWith("<!DOCTYPE") || text.startsWith("<html")) {
+        showToast("❌ تعذر التحقق من الاسم: السيرفر رجع HTML بدل JSON!", "error");
+        return;
+      }
+
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        showToast("❌ الاستجابة غير صالحة للتحليل كـ JSON.", "error");
+        console.error(e);
+        return;
+      }
+
+      if (!data.found || !Array.isArray(data.row)) {
+        showToast("❌ الاسم غير موجود في الشيت المختار.", "error");
+        return;
+      }
+
+      const tableBody = document.querySelector("#resultTable tbody");
+      tableBody.innerHTML = "";
+
+      const row = data.row;
+      const colMap = {
+        'B': 0, 'C': 1, 'D': 2, 'E': 3, 'F': 4,
+        'G': 5, 'H': 6, 'I': 7, 'J': 8, 'K': 9
+      };
+      const scores = Object.keys(colMap).map(letter => {
+        const index = colMap[letter] + 1;
+        return row[index] !== undefined && row[index] !== "" ? row[index] : "-";
+      });
+
+      const tr = document.createElement("tr");
+      const nameCell = document.createElement("td");
+      nameCell.textContent = row[0];
+      tr.appendChild(nameCell);
+
+      scores.forEach(score => {
+        const td = document.createElement("td");
+        td.textContent = score;
+        tr.appendChild(td);
+      });
+
+      tableBody.appendChild(tr);
+      console.log("✅ تم عرض بيانات الطالب بنجاح");
+    })
+    .catch(err => {
+      console.error("❌ خطأ أثناء البحث عن الاسم:", err);
+      showToast("❌ فشل الاتصال بالسيرفر.", "error");
+    });
+}
+    
+    function goBackToWeekSelection() {
+  console.log("🔙 الرجوع إلى صفحة اختيار الأسبوع");
+  if (mode === "edit") {
+    changePage("dataSection", "chooseActionSection");
+  } else {
+    changePage("dataSection", "weekSelectionPage");
+  }
+}
+
+    function getWeekIndex(weekName) {
+  const weekMap = {
+  "B": 0,
+  "C": 1,
+  "D": 2,
+  "E": 3,
+  "F": 4,
+  "G": 5,
+  "H": 6,
+  "I": 7,
+  "J": 8,
+  "K": 9
+};
+  return weekMap[weekName] ?? undefined;
+}
+
+    function updateStudentScore() {
+  const nameInput = document.getElementById("editName");
+  const scoreInput = document.getElementById("newScore");
+
+  const name = nameInput.value.trim();
+  const newScore = scoreInput.value.trim();
+
+  if (!name || newScore === "") {
+    showToast("❌ يجب إدخال الاسم والدرجة الجديدة!", "error");
+    return;
+  }
+
+  const scoreNumber = Number(newScore);
+  if (isNaN(scoreNumber) || scoreNumber < 0 || scoreNumber > 10) {
+    showToast("❌ الدرجة يجب أن تكون رقمًا بين 0 و10!", "error");
+    return;
+  }
+
+  if (!selectedSheet || !selectedWeek) {
+    showToast("❌ يجب اختيار الشيت والأسبوع أولاً!", "error");
+    return;
+  }
+
+  const payload = {
+    action: "updateScore",
+    sheet: selectedSheet,
+    week: selectedWeek,
+    name: name,
+    newScore: scoreNumber
+  };
+
+  fetch(scriptURL, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(res => res.text())
+    .then(data => {
+      console.log("📌 استجابة التعديل:", data);
+      try {
+        const response = JSON.parse(data);
+        if (response.success) {
+          showToast("✅ تم تعديل الدرجة بنجاح!", "success");
+
+          // ✅ مسح الخانات بعد التعديل
+          nameInput.value = "";
+          scoreInput.value = "";
+
+          // ✅ إعادة تحميل البيانات المحدثة
+          loadNames();
+        } else {
+          showToast("❌ فشل التعديل: " + (response.message || "خطأ غير معروف"), "error");
+        }
+      } catch (err) {
+        console.error("❌ خطأ في تحليل استجابة JSON:", err);
+        showToast("❌ فشل في تفسير استجابة السيرفر!", "error");
+      }
+    })
+    .catch(err => {
+      console.error("❌ خطأ أثناء إرسال طلب التعديل:", err);
+      showToast("❌ حدث خطأ أثناء إرسال البيانات إلى السيرفر!", "error");
+    });
+}
+    
+function generateWeekReport() {
+  const week = document.getElementById("reportWeekInput").value.trim();
+  if (!week) return showToast("❌ الرجاء إدخال اسم الأسبوع.", "error");
+
+  fetch(`${scriptURL}?action=getStudentScores&sheet=${selectedSheet}`)
+    .then(res => res.json())
+    .then(data => {
+      const index = getWeekIndex(week);
+      if (!data.students || index === undefined) {
+    return showToast("❌ بيانات غير صالحة.", "error");
+}
+
+      let html = `<table><thead><tr><th>الاسم</th><th>الدرجة</th></tr></thead><tbody>`;
+
+      data.students.forEach(student => {
+        const score = student.scores?.[index] ?? "-";
+        html += `<tr><td>${student.name}</td><td>${score}</td></tr>`;
+      });
+
+      html += `</tbody></table>`;
+      document.getElementById("weekReportResult").innerHTML = html;
+    })
+    .catch(err => console.error("❌ خطأ في إنشاء التقرير:", err));
+  window.generateWeekReport = generateWeekReport;
+
+}
+    function showWeekCount() {
+  const week = document.getElementById("reportWeekInput").value.trim();
+  if (!week) {
+    return showToast("❌ الرجاء اختيار الأسبوع.", "error");
+}
+
+  fetch(`${scriptURL}?action=getStudentScores&sheet=${selectedSheet}`)
+    .then(res => res.json())
+    .then(data => {
+      const index = getWeekIndex(week);
+      if (!data.students || index === undefined) {
+        document.getElementById("weekCountDisplay").textContent = "❌ لا يمكن حساب العدد لهذا الأسبوع.";
+        return;
+      }
+
+      const count = data.students.reduce((acc, student) => {
+        const score = student.scores?.[index];
+        return score !== undefined && score !== "" && score !== "-" ? acc + 1 : acc;
+      }, 0);
+
+      document.getElementById("weekCountDisplay").textContent =
+        `✅ عدد الطلاب الذين لديهم درجة في الأسبوع ${week}: ${count}`;
+    })
+    .catch(err => {
+      console.error("❌ خطأ في حساب العدد:", err);
+      document.getElementById("weekCountDisplay").textContent = "❌ حدث خطأ أثناء حساب العدد.";
+    });
+      window.showWeekCount = showWeekCount;
+}
+
+      function showToast(message, type = "success", duration = 3000) {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.className = `toast ${type} show`;
+  
+  // يختفي بعد وقت معين
+  setTimeout(() => {
+    toast.className = toast.className.replace("show", "");
+  }, duration);
+}
+
+</script>
+</body>
+</html>
