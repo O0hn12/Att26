@@ -362,12 +362,17 @@ table {
 <div id="backButtonContainer">
     <button id="backBtn" onclick="goBackToWeekSelection()">⬅️ رجوع</button>
 </div>
+</div>
+</div>
+
 <div id="toast-container"></div>
-  <script>
-    let mode = ""; // إما "insert" أو "edit"
-    let selectedSheet = "";
-    const scriptURL = 'https://attendace.johnmamdouh777.workers.dev/';
-    let allNames = [];
+
+<script>
+let mode = "";
+let selectedSheet = "";
+let currentUser = "";
+const scriptURL = 'https://attendace.johnmamdouh777.workers.dev/';
+let allNames = [];
     
     document.getElementById("loginBtn").addEventListener("click", function () {
   console.log("🔍 تم الضغط على تسجيل الدخول");
@@ -393,7 +398,7 @@ const users = {
 if (users[username] && users[username] === password) {
   showToast("✅ تم تسجيل الدخول بنجاح", "success");
 
-  const currentUser = username;
+  currentUser = username;
   const privilegedUsers = ["john", "selvana", "maria", "mariam", "bebo", "magood", "andro", "admin", "jomana", "labota", "nadeen"];
 
   setTimeout(() => {
@@ -543,7 +548,7 @@ function goToEdit() {
         });
       }
 if (mode === "insert") {
-    changePage("choice-section", "dataSection");
+    changePage("choiceSection", "dataSection");
   }
  else {
         console.warn("❌ لم يتم العثور على editWeekDropdown");
@@ -985,12 +990,15 @@ function generateWeekReport() {
 
   container.appendChild(toast);
 
-  setTimeout(() => {
-    toast.remove();
-  }, 3000);
+setTimeout(() => {
+  toast.classList.add("show");
+}, 10);
+
+setTimeout(() => {
+  toast.remove();
+}, 3000);
 }
       
 </script>
 </body>
 </html>
-
