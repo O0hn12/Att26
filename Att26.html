@@ -46,7 +46,6 @@
       filter: brightness(85%);
     }
 
-    /* ألوان متدرجة لكل زرار */
     nav button.attendance { background: linear-gradient(45deg, #4CAF50, #81C784); }
     nav button.homework   { background: linear-gradient(45deg, #FF9800, #FFB74D); }
     nav button.grades     { background: linear-gradient(45deg, #2196F3, #64B5F6); }
@@ -62,46 +61,19 @@
       border-radius: 10px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
-    section.active {
-      display: block;
-    }
-    @keyframes fadein {
-      from {opacity: 0;}
-      to {opacity: 1;}
-    }
+    section.active { display: block; }
+    @keyframes fadein { from {opacity: 0;} to {opacity: 1;} }
 
-    /* للموبايل بالطول */
+    /* للموبايل */
     @media (max-width: 768px) {
-      nav {
-        flex-direction: column;
-        width: 100%;
-      }
-      nav button {
-        width: 100%;
-        font-size: 18px;
-        padding: 15px;
-        text-align: center;
-        border-bottom: 1px solid #444;
-      }
-      section {
-        margin: 5px;
-        padding: 12px;
-        font-size: 14px;
-      }
-      header {
-        font-size: 18px;
-        padding: 12px;
-      }
-      h2 {
-        font-size: 16px;
-      }
-      p {
-        font-size: 14px;
-        line-height: 1.6;
-      }
+      nav { flex-direction: column; width: 100%; }
+      nav button { width: 100%; font-size: 18px; padding: 15px; text-align: center; border-bottom: 1px solid #444; }
+      section { margin: 5px; padding: 12px; font-size: 14px; }
+      header { font-size: 18px; padding: 12px; }
+      h2 { font-size: 16px; }
+      p { font-size: 14px; line-height: 1.6; }
     }
 
-    /* Toast Notification */
     .toast {
       visibility: hidden;
       min-width: 250px;
@@ -118,11 +90,7 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       transition: opacity 0.5s, bottom 0.5s;
     }
-    .toast.show {
-      visibility: visible;
-      opacity: 1;
-      bottom: 50px;
-    }
+    .toast.show { visibility: visible; opacity: 1; bottom: 50px; }
     .toast.success { background-color: #4CAF50; }
     .toast.error { background-color: #f44336; }
     .toast.warning { background-color: #ff9800; }
@@ -131,7 +99,16 @@
 <body>
   <header>Heroes Adventure 2026 Attendance</header>
 
-  <nav>
+  <!-- صفحة تسجيل الدخول -->
+  <section id="loginSection" class="active">
+    <h2>تسجيل الدخول</h2>
+    <input type="text" id="loginUsername" placeholder="اسم المستخدم">
+    <input type="password" id="loginPassword" placeholder="كلمة المرور">
+    <button id="loginBtn">🔑 دخول</button>
+  </section>
+
+  <!-- التابات -->
+  <nav style="display:none;" id="mainNav">
     <button class="attendance active" onclick="showTab('attendance')">الحضور</button>
     <button class="homework" onclick="showTab('homework')">الواجب</button>
     <button class="grades" onclick="showTab('grades')">الدرجات</button>
@@ -140,7 +117,7 @@
   </nav>
 
   <main>
-    <section id="attendance" class="active">
+    <section id="attendance">
       <h2>الحضور</h2>
       <input type="text" id="nameInput" placeholder="الاسم">
       <input type="number" id="attendanceInput" min="0" max="5" placeholder="الحضور (0-5)">
@@ -161,9 +138,7 @@
       <button onclick="searchName()">🔍 بحث</button>
       <div id="tableContainer">
         <table id="resultTable">
-          <thead>
-            <tr><th>الاسم</th><th>الأسبوع 1</th><th>الأسبوع 2</th><th>الأسبوع 3</th></tr>
-          </thead>
+          <thead><tr><th>الاسم</th><th>الأسبوع 1</th><th>الأسبوع 2</th><th>الأسبوع 3</th></tr></thead>
           <tbody></tbody>
         </table>
       </div>
@@ -193,7 +168,41 @@
     let selectedWeek = "B";
     const scriptURL = 'https://attendace.johnmamdouh777.workers.dev/';
     let allNames = [];
+    let currentUser = "";
 
+    // ✅ تسجيل الدخول
+    document.getElementById("loginBtn").addEventListener("click", function () {
+      const username = document.getElementById("loginUsername").value.trim();
+      const password = document.getElementById("loginPassword").value.trim();
+
+      const users = {
+        "john": "viscabarca",
+        "admin": "000",
+        "selvana": "123",
+        "maria": "123",
+        "mariam": "123",
+        "bebo": "123",
+        "magood": "123",
+        "andro": "123",
+        "jomana": "123",
+        "nadeen": "123",
+        "labota": "204625"
+      };
+
+      if (users[username] && users[username] === password) {
+        showToast("✅ تم تسجيل الدخول بنجاح", "success");
+        currentUser = username;
+        setTimeout(() => {
+          document.getElementById("loginSection").style.display = "none";
+          document.getElementById("mainNav").style.display = "flex";
+          showTab("attendance");
+        }, 1000);
+      } else {
+        showToast("❌ اسم المستخدم أو كلمة المرور غير صحيحة!", "error");
+      }
+    });
+
+    // ✅ تبديل التابات
     function showTab(tabId) {
       document.querySelectorAll("section").forEach(sec => sec.classList.remove("active"));
       document.querySelectorAll("nav button").forEach(btn => btn.classList.remove("active"));
@@ -201,6 +210,7 @@
       event.target.classList.add("active");
     }
 
+    // ✅ Toast
     function showToast(message, type="success") {
       const toast = document.createElement("div");
       toast.className = "toast " + type;
@@ -210,6 +220,7 @@
       setTimeout(() => { toast.remove(); }, 3000);
     }
 
+    // ✅ إدخال بيانات الحضور
     function checkSubmitState() {
       const name = document.getElementById("nameInput").value.trim();
       const attendance = document.getElementById("attendanceInput").value.trim();
@@ -262,6 +273,7 @@
       .catch(() => showToast("❌ خطأ في الاتصال!", "error"));
     }
 
+    // ✅ تعديل بيانات
     function updateStudentScore() {
       const name = document.getElementById("editName").value.trim();
       const newScore = document.getElementById("newScore").value.trim();
@@ -299,6 +311,7 @@
       .catch(() => showToast("❌ خطأ في الاتصال!", "error"));
     }
 
+    // ✅ البحث
     function searchName() {
       const search = document.getElementById("searchInput").value.trim();
       if (!search) {
@@ -327,6 +340,7 @@
       .catch(() => showToast("❌ خطأ في الاتصال!", "error"));
     }
 
+    // ✅ تقرير الأسبوع
     function showWeekCount() {
       const week = document.getElementById("reportWeekInput").value.trim();
       if (!week) return showToast("❌ اختر الأسبوع!", "error");
