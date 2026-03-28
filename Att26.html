@@ -110,12 +110,12 @@ document.getElementById("loginBtn").addEventListener("click", function () {
   }
 });
 
-// ✅ تبديل التابات
-function showTab(tabId){
+// ✅ تبديل التابات (FIXED)
+function showTab(tabId, event){
   document.querySelectorAll("main section").forEach(sec=>sec.style.display="none");
   document.querySelectorAll("nav button").forEach(btn=>btn.classList.remove("active"));
   document.getElementById(tabId).style.display="block";
-  event.target.classList.add("active");
+  if(event) event.target.classList.add("active");
 }
 
 // ✅ Toast
@@ -128,16 +128,19 @@ function showToast(message,type="success"){
   setTimeout(()=>{toast.remove();},3000);
 }
 
-// ✅ إدخال بيانات الحضور
+// ✅ إدخال بيانات الحضور (FIXED validation)
 function checkSubmitState(){
   const name=document.getElementById("nameInput").value.trim();
-  const attendance=document.getElementById("attendanceInput").value.trim();
-  const book=document.getElementById("bookInput").value.trim();
-  const validAttendance=attendance!=="" && +attendance>=0 && +attendance<=5;
-  const validBook=book!=="" && +book>=0 && +book<=5;
-  const hasName=name!=="";
-  document.getElementById("submitBtn").disabled=!(hasName && validAttendance && validBook);
+  const attendance=Number(document.getElementById("attendanceInput").value);
+  const book=Number(document.getElementById("bookInput").value);
+
+  const validAttendance = !isNaN(attendance) && attendance >= 0 && attendance <= 5;
+  const validBook = !isNaN(book) && book >= 0 && book <= 5;
+  const hasName = name !== "";
+
+  document.getElementById("submitBtn").disabled = !(hasName && validAttendance && validBook);
 }
+
 document.getElementById("nameInput").addEventListener("input",checkSubmitState);
 document.getElementById("attendanceInput").addEventListener("input",checkSubmitState);
 document.getElementById("bookInput").addEventListener("input",checkSubmitState);
@@ -147,9 +150,14 @@ function submitData(){
   const attendance=Number(document.getElementById("attendanceInput").value);
   const book=Number(document.getElementById("bookInput").value);
   const total=attendance+book;
-  if(!selectedWeek){showToast("❌ يجب اختيار الأسبوع!","error");return;}
+
   const data={name,number:total,sheet:selectedSheet,week:selectedWeek};
-  fetch(scriptURL,{method:'POST',body:JSON.stringify(data),headers:{'Content-Type':'application/json'}})
+
+  fetch(scriptURL,{
+    method:'POST',
+    body:JSON.stringify(data),
+    headers:{'Content-Type':'application/json'}
+  })
   .then(res=>res.text())
   .then(text=>{
     try{
@@ -160,8 +168,12 @@ function submitData(){
         document.getElementById("attendanceInput").value="";
         document.getElementById("bookInput").value="";
         checkSubmitState();
-      }else{showToast("❌ فشل الإدخال!","error");}
-    }catch{showToast("❌ استجابة غير صالحة!","error");}
+      }else{
+        showToast("❌ فشل الإدخال!","error");
+      }
+    }catch{
+      showToast("❌ استجابة غير صالحة!","error");
+    }
   })
   .catch(()=>showToast("❌ خطأ في الاتصال!","error"));
 }
@@ -170,9 +182,25 @@ function submitData(){
 function updateStudentScore(){
   const name=document.getElementById("editName").value.trim();
   const newScore=document.getElementById("newScore").value.trim();
-  if(!name||newScore===""){showToast("❌ يجب إدخال الاسم والدرجة!","error");return;}
-  const payload={action:"updateScore",sheet:selectedSheet,week:selectedWeek,name:name,newScore:Number(newScore)};
-  fetch(scriptURL,{method:'POST',body:JSON.stringify(payload),headers:{'Content-Type':'application/json'}})
+
+  if(!name || newScore===""){
+    showToast("❌ يجب إدخال الاسم والدرجة!","error");
+    return;
+  }
+
+  const payload={
+    action:"updateScore",
+    sheet:selectedSheet,
+    week:selectedWeek,
+    name:name,
+    newScore:Number(newScore)
+  };
+
+  fetch(scriptURL,{
+    method:'POST',
+    body:JSON.stringify(payload),
+    headers:{'Content-Type':'application/json'}
+  })
   .then(res=>res.text())
   .then(text=>{
     try{
@@ -181,50 +209,79 @@ function updateStudentScore(){
         showToast("✅ تم تعديل الدرجة!","success");
         document.getElementById("editName").value="";
         document.getElementById("newScore").value="";
-      }else{showToast("❌ فشل التعديل!","error");}
-    }catch{showToast("❌ استجابة غير صالحة!","error");}
+      }else{
+        showToast("❌ فشل التعديل!","error");
+      }
+    }catch{
+      showToast("❌ استجابة غير صالحة!","error");
+    }
   })
   .catch(()=>showToast("❌ خطأ في الاتصال!","error"));
 }
 
-// ✅ البحث داخل تاب الحضور
+// ✅ البحث (FIXED dynamic columns)
 function searchName(){
   const search=document.getElementById("searchInput").value.trim();
-  if(!search){showToast("❌ أدخل اسم للبحث!","error");return;}
+  if(!search){
+    showToast("❌ أدخل اسم للبحث!","error");
+    return;
+  }
+
   fetch(`${scriptURL}?action=getRowByName&sheet=${selectedSheet}&name=${encodeURIComponent(search)}`)
   .then(res=>res.text())
   .then(text=>{
     let data;
-    try{data=JSON.parse(text);}catch{showToast("❌ خطأ في البيانات!","error");return;}
-    if(!data.found){showToast("❌ الاسم غير موجود!","error");return;}
+    try{
+      data=JSON.parse(text);
+    }catch{
+      showToast("❌ خطأ في البيانات!","error");
+      return;
+    }
+
+    if(!data.found){
+      showToast("❌ الاسم غير موجود!","error");
+      return;
+    }
+
     const tableBody=document.querySelector("#resultTable tbody");
     tableBody.innerHTML="";
+
     const tr=document.createElement("tr");
+
     const nameCell=document.createElement("td");
     nameCell.textContent=data.row[0];
     tr.appendChild(nameCell);
-    for(let i=1;i<=3;i++){
+
+    for(let i=1;i<data.row.length;i++){
       const td=document.createElement("td");
-      td.textContent=data.row[i]||"-";
+      td.textContent=data.row[i] || "-";
       tr.appendChild(td);
     }
+
     tableBody.appendChild(tr);
   })
   .catch(()=>showToast("❌ خطأ في الاتصال!","error"));
 }
 
-// ✅ تقرير الأسبوع
+// ✅ تقرير الأسبوع (FIXED week validation)
 function showWeekCount(){
   const week=document.getElementById("reportWeekInput").value.trim();
-  if(!week)return showToast("❌ اختر الأسبوع!","error");
+
+  const map={B:0,C:1,D:2};
+  if(!(week in map)){
+    return showToast("❌ أسبوع غير صحيح","error");
+  }
+
   fetch(`${scriptURL}?action=getStudentScores&sheet=${selectedSheet}`)
   .then(res=>res.json())
   .then(data=>{
-    const index={B:0,C:1,D:2}[week];
+    const index=map[week];
+
     const count=data.students.reduce((acc,s)=>{
       const score=s.scores?.[index];
-      return score&&score!=="-"?acc+1:acc;
+      return score && score!=="-" ? acc+1 : acc;
     },0);
+
     document.getElementById("weekCountDisplay").textContent=`✅ عدد الطلاب: ${count}`;
   })
   .catch(()=>showToast("❌ خطأ في الحساب!","error"));
@@ -232,16 +289,24 @@ function showWeekCount(){
 
 function generateWeekReport(){
   const week=document.getElementById("reportWeekInput").value.trim();
-  if(!week)return showToast("❌ اختر الأسبوع!","error");
+
+  const map={B:0,C:1,D:2};
+  if(!(week in map)){
+    return showToast("❌ أسبوع غير صحيح","error");
+  }
+
   fetch(`${scriptURL}?action=getStudentScores&sheet=${selectedSheet}`)
   .then(res=>res.json())
   .then(data=>{
-    const index={B:0,C:1,D:2}[week];
+    const index=map[week];
+
     let html="<table><tr><th>الاسم</th><th>الدرجة</th></tr>";
+
     data.students.forEach(s=>{
-      const score=s.scores?.[index]??"-";
+      const score=s.scores?.[index] ?? "-";
       html+=`<tr><td>${s.name}</td><td>${score}</td></tr>`;
     });
+
     html+="</table>";
     document.getElementById("weekReportResult").innerHTML=html;
   })
