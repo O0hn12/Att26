@@ -7,93 +7,24 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Changa:wght@500&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Cairo', sans-serif;
-      margin: 0;
-      padding: 0;
-      direction: rtl;
-      background: #f4f6f9;
-      color: #333;
-    }
-    header {
-      background: linear-gradient(90deg, #2196F3, #1976D2);
-      color: white;
-      padding: 20px;
-      text-align: center;
-      font-size: 24px;
-      font-weight: bold;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    }
-    nav {
-      display: flex;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    nav button {
-      flex: 1;
-      padding: 15px;
-      border: none;
-      color: #fff;
-      cursor: pointer;
-      font-size: 16px;
-      font-family: 'Changa', sans-serif;
-      transition: background 0.3s, transform 0.2s;
-    }
-    nav button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-    }
-    nav button.active {
-      filter: brightness(85%);
-    }
-
-    nav button.attendance { background: linear-gradient(45deg, #4CAF50, #81C784); }
-    nav button.homework   { background: linear-gradient(45deg, #FF9800, #FFB74D); }
-    nav button.grades     { background: linear-gradient(45deg, #2196F3, #64B5F6); }
-    nav button.reaction   { background: linear-gradient(45deg, #9C27B0, #BA68C8); }
-    nav button.gallery    { background: linear-gradient(45deg, #E91E63, #F06292); }
-
-    section {
-      display: none;
-      padding: 25px;
-      animation: fadein 0.5s;
-      background: white;
-      margin: 20px;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    section.active { display: block; }
-    @keyframes fadein { from {opacity: 0;} to {opacity: 1;} }
-
-    /* للموبايل */
-    @media (max-width: 768px) {
-      nav { flex-direction: column; width: 100%; }
-      nav button { width: 100%; font-size: 18px; padding: 15px; text-align: center; border-bottom: 1px solid #444; }
-      section { margin: 5px; padding: 12px; font-size: 14px; }
-      header { font-size: 18px; padding: 12px; }
-      h2 { font-size: 16px; }
-      p { font-size: 14px; line-height: 1.6; }
-    }
-
-    .toast {
-      visibility: hidden;
-      min-width: 250px;
-      background-color: #333;
-      color: #fff;
-      text-align: center;
-      border-radius: 8px;
-      padding: 16px;
-      position: fixed;
-      z-index: 9999;
-      left: 50%;
-      bottom: 30px;
-      font-size: 1.1em;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      transition: opacity 0.5s, bottom 0.5s;
-    }
-    .toast.show { visibility: visible; opacity: 1; bottom: 50px; }
-    .toast.success { background-color: #4CAF50; }
-    .toast.error { background-color: #f44336; }
-    .toast.warning { background-color: #ff9800; }
+    body { font-family: 'Cairo', sans-serif; margin:0; padding:0; direction:rtl; background:#f4f6f9; color:#333; }
+    header { background:linear-gradient(90deg,#2196F3,#1976D2); color:white; padding:20px; text-align:center; font-size:24px; font-weight:bold; box-shadow:0 2px 6px rgba(0,0,0,0.2); }
+    nav { display:flex; box-shadow:0 2px 4px rgba(0,0,0,0.1); }
+    nav button { flex:1; padding:15px; border:none; color:#fff; cursor:pointer; font-size:16px; font-family:'Changa',sans-serif; transition:background 0.3s, transform 0.2s; }
+    nav button:hover { transform:scale(1.05); box-shadow:0 3px 6px rgba(0,0,0,0.2); }
+    nav button.active { filter:brightness(85%); }
+    nav button.attendance { background:linear-gradient(45deg,#4CAF50,#81C784); }
+    nav button.homework { background:linear-gradient(45deg,#FF9800,#FFB74D); }
+    nav button.grades { background:linear-gradient(45deg,#2196F3,#64B5F6); }
+    nav button.reaction { background:linear-gradient(45deg,#9C27B0,#BA68C8); }
+    nav button.gallery { background:linear-gradient(45deg,#E91E63,#F06292); }
+    section { display:none; padding:25px; animation:fadein 0.5s; background:white; margin:20px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+    section.active { display:block; }
+    @keyframes fadein { from{opacity:0;} to{opacity:1;} }
+    @media(max-width:768px){ nav{flex-direction:column;width:100%;} nav button{width:100%;font-size:18px;padding:15px;text-align:center;border-bottom:1px solid #444;} section{margin:5px;padding:12px;font-size:14px;} header{font-size:18px;padding:12px;} h2{font-size:16px;} p{font-size:14px;line-height:1.6;} }
+    .toast{visibility:hidden;min-width:250px;background-color:#333;color:#fff;text-align:center;border-radius:8px;padding:16px;position:fixed;z-index:9999;left:50%;bottom:30px;font-size:1.1em;box-shadow:0 4px 12px rgba(0,0,0,0.3);transition:opacity 0.5s,bottom 0.5s;}
+    .toast.show{visibility:visible;opacity:1;bottom:50px;}
+    .toast.success{background-color:#4CAF50;} .toast.error{background-color:#f44336;} .toast.warning{background-color:#ff9800;}
   </style>
 </head>
 <body>
@@ -117,23 +48,15 @@
   </nav>
 
   <main>
+    <!-- تاب الحضور -->
     <section id="attendance">
       <h2>الحضور</h2>
       <input type="text" id="nameInput" placeholder="الاسم">
       <input type="number" id="attendanceInput" min="0" max="5" placeholder="الحضور (0-5)">
       <input type="number" id="bookInput" min="0" max="5" placeholder="الكتاب (0-5)">
       <button id="submitBtn" onclick="submitData()" disabled>✅ إدخال</button>
-    </section>
-
-    <section id="homework">
-      <h2>الواجب</h2>
-      <input type="text" id="editName" placeholder="الاسم">
-      <input type="number" id="newScore" min="0" max="10" placeholder="درجة جديدة">
-      <button onclick="updateStudentScore()">✏️ تعديل</button>
-    </section>
-
-    <section id="grades">
-      <h2>الدرجات</h2>
+      <hr>
+      <h3>بحث عن اسم</h3>
       <input type="text" id="searchInput" placeholder="ابحث بالاسم">
       <button onclick="searchName()">🔍 بحث</button>
       <div id="tableContainer">
@@ -144,30 +67,15 @@
       </div>
     </section>
 
-    <section id="reaction">
-      <h2>التفاعل</h2>
-      <select id="reportWeekInput">
-        <option value="">اختر الأسبوع</option>
-        <option value="B">الأسبوع الأول</option>
-        <option value="C">الأسبوع الثاني</option>
-        <option value="D">الأسبوع الثالث</option>
-      </select>
-      <button onclick="showWeekCount()">👥 عرض العدد</button>
-      <div id="weekCountDisplay"></div>
-      <button onclick="generateWeekReport()">📋 عرض التقرير</button>
-      <div id="weekReportResult"></div>
-    </section>
-
-    <section id="gallery">
-      <h2>المعرض</h2>
-      <p>صور أو محتوى إضافي.</p>
-    </section>
+    <section id="homework"><h2>الواجب</h2><p>تعديل بيانات الطالب.</p><input type="text" id="editName" placeholder="الاسم"><input type="number" id="newScore" min="0" max="10" placeholder="درجة جديدة"><button onclick="updateStudentScore()">✏️ تعديل</button></section>
+    <section id="grades"><h2>الدرجات</h2><p>عرض تقارير الدرجات.</p></section>
+    <section id="reaction"><h2>التفاعل</h2><select id="reportWeekInput"><option value="">اختر الأسبوع</option><option value="B">الأسبوع الأول</option><option value="C">الأسبوع الثاني</option><option value="D">الأسبوع الثالث</option></select><button onclick="showWeekCount()">👥 عرض العدد</button><div id="weekCountDisplay"></div><button onclick="generateWeekReport()">📋 عرض التقرير</button><div id="weekReportResult"></div></section>
+    <section id="gallery"><h2>المعرض</h2><p>صور أو محتوى إضافي.</p></section>
   </main>
   <script>
     let selectedSheet = "1ب";
     let selectedWeek = "B";
     const scriptURL = 'https://attendace.johnmamdouh777.workers.dev/';
-    let allNames = [];
     let currentUser = "";
 
     // ✅ تسجيل الدخول
@@ -204,7 +112,7 @@
 
     // ✅ تبديل التابات
     function showTab(tabId) {
-      document.querySelectorAll("section").forEach(sec => sec.classList.remove("active"));
+      document.querySelectorAll("main section").forEach(sec => sec.classList.remove("active"));
       document.querySelectorAll("nav button").forEach(btn => btn.classList.remove("active"));
       document.getElementById(tabId).classList.add("active");
       event.target.classList.add("active");
@@ -311,7 +219,7 @@
       .catch(() => showToast("❌ خطأ في الاتصال!", "error"));
     }
 
-    // ✅ البحث
+    // ✅ البحث داخل تاب الحضور
     function searchName() {
       const search = document.getElementById("searchInput").value.trim();
       if (!search) {
